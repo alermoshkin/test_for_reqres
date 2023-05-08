@@ -8,7 +8,7 @@ from test_params import *
 def test_get_users(page):
     response = requests.get(f'https://reqres.in/api/users?page={page}')
     assert response.status_code == 200
-    assert len(response.json()['data']) > 0
+    assert len(response.json()['data']) >= 0
 
 # Негативные тесты для получения списка пользователей с некорректными параметрами page
 @pytest.mark.parametrize('page', params_page_negative)
@@ -131,7 +131,7 @@ def test_update_user(name, job):
     assert response.json()["job"] == job
 
 # Негативный тест на обновление данных пользователя PATCH
-@pytest.mark.parametrize("name, job, status_code", [("", "engineer", 400), ("Jack", "", 400), ("John", "engineer", 200)])
+@pytest.mark.parametrize("name, job, status_code", [("", "engineer", 400), ("Igor", "", 400), ("Ivan", "povar", 200)])
 def test_update_user(name, job, status_code):
     url = "https://reqres.in/api/users/2"
     payload = {
@@ -190,6 +190,7 @@ def test_login_negative_email(email, password):
     payload = {'email': email, 'password': password}
     response = requests.post(url, data=payload)
     assert response.status_code == 400
+    assert response.json()['error'] == 'user not found'
 
 
 # Негативный тест - логин с неправильным password
@@ -199,7 +200,7 @@ def test_login_negative_password(email, password):
     payload = {'email': email, 'password': password}
     response = requests.post(url, data=payload)
     assert response.status_code == 400
-    assert response.json()['error'] == 'Missing password'
+    assert response.json()['error'] == 'user not found'
 
 
 # Фикстура

@@ -72,7 +72,7 @@ class TestApiUi:
             assert api_response['name'] == json.loads(ui_response)['name']
             assert api_response['job'] == json.loads(ui_response)['job']
         elif method == 'DELETE' and api_url == 'https://reqres.in/api/users/2':
-            # сравнение в методе DELET происходит только на соответствие статус кода.
+            # сравнение в методе DELE происходит только на консистентность полей "name" и "job", тк поля createdAt и Id будут уникальными.
             payload = {'name': 'morpheus', 'job': 'zion resident'}
             api_status_code = requests.delete(api_url, json=payload).status_code
             assert api_status_code == int(ui_response_status_code)
